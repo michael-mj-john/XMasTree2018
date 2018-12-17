@@ -6,16 +6,16 @@ class Snowflake {
     int8_t row;
     uint8_t column;
     int animDelay; // milliseconds before it moves on
-    uint16_t lastMillis;
+    uint32_t lastMillis;
 
   public:
     struct Snowflake *next;
 
-  Snowflake(Snowflake *headPtr) {
+  Snowflake() {
     row = 19;
     column = random(0,6);
-    next = headPtr;
-    animDelay = 300;
+    next = NULL;
+    animDelay = 100;
   }
 
   boolean setColor() {
@@ -25,11 +25,13 @@ class Snowflake {
        row--;
        lastMillis = millis();
     }
-    if( row == -1 ) {
+    if( row < 0 ) {
        leds[lights[column][row+1]].setRGB( 0, 0, 50 ); // set final pixel to blue
        return true;
+       Serial.println( "returned true" );
     }
     return false;
+    Serial.println( "returned false" );
   }
 
   

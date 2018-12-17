@@ -37,8 +37,8 @@ void loop() {
 
      if( random(100) < 20 && flakeCount < FLAKEMAX ) { 
         struct Snowflake* flakePtr;
-        flakePtr = new Snowflake(snowflakes_head);
-        snowflakes_head = flakePtr; 
+        flakePtr = new Snowflake();
+        flakePtr->next = snowflakes_head; 
         flakeCount++;
      }
 
@@ -57,14 +57,16 @@ void loop() {
     while( flakePtr != NULL ) {
        flakeDead = flakePtr->setColor();
        if( flakeDead ) {
+         Serial.println( "flake flagged" );
           prevPtr->next = flakePtr->next;
           delete flakePtr;
           flakeCount--;
+          Serial.println( "removed flake" );
        }     
+       if( 
        prevPtr = flakePtr;
        flakePtr = flakePtr->next;      
     }
-
  
  }
   
