@@ -1,3 +1,4 @@
+#pragma once
 
 // stores lights in row/column array. Hashes row/column to light index
 // taking into account vertical swaps and also masked lights @ bottom
@@ -5,6 +6,11 @@
 
 #define ROWS 20
 #define COLUMNS 7
+#define NUM_LEDS 150
+
+
+CRGB leds[NUM_LEDS];
+
 
 uint8_t lights[COLUMNS][ROWS];
 
@@ -29,7 +35,7 @@ void initLights() {
     }
     // accommodate the lights that should be masked out at the bottom of the tree
     if( lightIndex - currentJump == 40 ) { currentJump += 6; }
-    if( lightIndex - currentJump == 80 ) { currentJump += 5; }
+    if( lightIndex - currentJump == 80 ) { currentJump += 4; }
     if( lightIndex - currentJump == 120 ) { currentJump += 4; }
   }
   
