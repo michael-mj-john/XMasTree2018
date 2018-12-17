@@ -1,11 +1,12 @@
 #include <FastLED.h>
 #include "lightHash.h"
+#include "Snowflake.h"
   
 #define NUM_LEDS 150
 #define PIN 7
 
 CRGB leds[NUM_LEDS];
-
+  
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
@@ -25,7 +26,8 @@ void setup() {
 }
 
 void loop() {
- 
+
+     
      // make everything blue
      if( !isBlue ) { 
        for( int col=0; col<COLUMNS; col++ ){
@@ -54,7 +56,7 @@ void loop() {
         }
       }
       FastLED.show();
-      delay(100);
+      delay(100); // need to get rid of this evil
     }    
  }
     
