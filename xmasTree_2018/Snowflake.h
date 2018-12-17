@@ -1,6 +1,5 @@
 #include "lightHash.h";
 
-
 class Snowflake {
   private:
     int8_t row;
@@ -8,14 +7,16 @@ class Snowflake {
     int animDelay; // milliseconds before it moves on
     uint32_t lastMillis;
 
-  public:
-    struct Snowflake *next;
-
   Snowflake() {
+    init();
+    row = -1; //default state when first created
+  }
+
+  void init() {
     row = 19;
     column = random(0,6);
-    next = NULL;
     animDelay = 100;
+    lastMillis = millis();
   }
 
   boolean setColor() {

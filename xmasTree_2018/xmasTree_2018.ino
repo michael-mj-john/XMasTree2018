@@ -12,7 +12,7 @@
 // on a live circuit...if you must, connect GND first.
 
 bool isBlue = false;
-struct Snowflake* snowflakes_head;
+struct Snowflake snowflakes[FLAKEMAX];
 uint8_t flakeCount = 0;
 
 void setup() {
@@ -36,11 +36,14 @@ void loop() {
      }
 
      if( random(100) < 20 && flakeCount < FLAKEMAX ) { 
-        struct Snowflake* flakePtr;
-        flakePtr = new Snowflake();
-        flakePtr->next = snowflakes_head; 
-        flakeCount++;
-     }
+        if( addFlake() ) {
+          Serial.println("flake added. Count ", flakeCount );
+        }
+        else {
+          Serial.println( "flake max reached at ", flakeCount );
+        }
+        
+      }
 
      updateFlakes();
 
@@ -51,22 +54,22 @@ void loop() {
 
 
  void updateFlakes() {
-    struct Snowflake *flakePtr = snowflakes_head;
-    struct Snowflake *prevPtr;
-    boolean flakeDead;
-    while( flakePtr != NULL ) {
-       flakeDead = flakePtr->setColor();
-       if( flakeDead ) {
-         Serial.println( "flake flagged" );
-          prevPtr->next = flakePtr->next;
-          delete flakePtr;
-          flakeCount--;
-          Serial.println( "removed flake" );
-       }     
-       if( 
-       prevPtr = flakePtr;
-       flakePtr = flakePtr->next;      
-    }
- 
- }
   
+    for( uint8_t i=0; i<FLAKEMAX; i++ ) {
+        if( snowflakes[i].row >=0 ) {
+          snowflakes[i].setColor();
+        }
+    }
+
+ }
+
+boolean addFlake( void ) {
+      for( uint8_t i=0; i<FLAKEMAX; i++ ) {
+          if( snowflakes[i].row < 0 ) {
+            snowflakes[i].init();
+            flakeCount++;
+            return true;
+          }
+        }
+        return false;
+}
