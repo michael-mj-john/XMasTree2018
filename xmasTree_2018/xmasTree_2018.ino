@@ -3,7 +3,7 @@
 #include "Snowflake.h"
   
 #define PIN 7
-#define FLAKEMAX 10
+#define FLAKEMAX 50
 
   
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
@@ -14,12 +14,13 @@
 bool isBlue = false;
 struct Snowflake snowflakes[FLAKEMAX];
 uint8_t flakeCount = 0;
+uint32_t lastSpawn; uint32_t minDelay;
 
 void setup() {
   Serial.begin(9600);
   FastLED.addLeds<NEOPIXEL, PIN>(leds, NUM_LEDS);
-  snowflakes_head = NULL;
   initLights();
+  minDelay = 300;
   randomSeed(analogRead(0));
 }
 
@@ -35,14 +36,14 @@ void loop() {
         isBlue = true;
      }
 
-     if( random(100) < 20 && flakeCount < FLAKEMAX ) { 
+     if( random(100) < 20 && flakeCount < FLAKEMAX && millis() - lastSpawn > minDelay ) { 
         if( addFlake() ) {
-          Serial.println("flake added. Count ", flakeCount );
+          Serial.print("flake added. Count "); Serial.println ( flakeCount );
         }
         else {
-          Serial.println( "flake max reached at ", flakeCount );
+          Serial.print( "flake max reached at "); Serial.println( flakeCount );
         }
-        
+        lastSpawn = millis();
       }
 
      updateFlakes();
@@ -54,11 +55,14 @@ void loop() {
 
 
  void updateFlakes() {
-  
+
+    flakeCount = 0;
     for( uint8_t i=0; i<FLAKEMAX; i++ ) {
         if( snowflakes[i].row >=0 ) {
           snowflakes[i].setColor();
+          flakeCount++;
         }
+        
     }
 
  }
@@ -67,7 +71,6 @@ boolean addFlake( void ) {
       for( uint8_t i=0; i<FLAKEMAX; i++ ) {
           if( snowflakes[i].row < 0 ) {
             snowflakes[i].init();
-            flakeCount++;
             return true;
           }
         }

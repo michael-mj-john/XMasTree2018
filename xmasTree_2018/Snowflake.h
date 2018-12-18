@@ -1,12 +1,14 @@
 #include "lightHash.h";
 
 class Snowflake {
-  private:
+  public:
     int8_t row;
+  private:
     uint8_t column;
     int animDelay; // milliseconds before it moves on
     uint32_t lastMillis;
 
+  public:
   Snowflake() {
     init();
     row = -1; //default state when first created
@@ -15,7 +17,7 @@ class Snowflake {
   void init() {
     row = 19;
     column = random(0,6);
-    animDelay = 100;
+    animDelay = random(220,350);
     lastMillis = millis();
   }
 
