@@ -5,6 +5,7 @@
 #include <FastLED.h>
 #include "lightHash.h"
 #include "Snowflake.h"
+#include "noisefunctions.h"
   
 #define PIN 7
 #define FLAKEMAX 50
