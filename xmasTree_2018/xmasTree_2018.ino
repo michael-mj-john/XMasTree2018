@@ -1,3 +1,7 @@
+/* MJ's holiday xmas tree lights 2018 
+ *  MIT license open source
+ */
+
 #include <FastLED.h>
 #include "lightHash.h"
 #include "Snowflake.h"
