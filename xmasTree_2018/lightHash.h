@@ -21,8 +21,8 @@ void initLights() {
   for( int i=0; i<COLUMNS; i++ ) {
     if( i % 2 == 0 ) { //even numbered column
       for( int j=0; j<ROWS; j++ ) {
-        lights[i][j] = lightIndex + currentJump;
-        lightIndex++; 
+       lights[i][j] = lightIndex + currentJump;
+       lightIndex++; 
       }
     }
     else {  //odd numbered column, has to count down
@@ -34,9 +34,9 @@ void initLights() {
       lightIndex += ROWS+1;      
     }
     // accommodate the lights that should be masked out at the bottom of the tree
-    if( lightIndex - currentJump == 40 ) { currentJump += 6; }
-    if( lightIndex - currentJump == 80 ) { currentJump += 4; }
-    if( lightIndex - currentJump == 120 ) { currentJump += 4; }
+    if( lightIndex == 40 ) { currentJump += 6; }
+    if( lightIndex == 80 ) { currentJump += 4; }
+    if( lightIndex == 120 ) { currentJump += 4; }
   }
   
 }

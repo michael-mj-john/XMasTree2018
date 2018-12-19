@@ -37,18 +37,12 @@ void loop() {
      }
 
      if( random(100) < 20 && flakeCount < FLAKEMAX && millis() - lastSpawn > minDelay ) { 
-        if( addFlake() ) {
-          Serial.print("flake added. Count "); Serial.println ( flakeCount );
-        }
-        else {
-          Serial.print( "flake max reached at "); Serial.println( flakeCount );
-        }
+        addFlake();
         lastSpawn = millis();
       }
 
      updateFlakes();
 
-     Serial.println(flakeCount);
      FastLED.show();
  
  }

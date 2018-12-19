@@ -31,10 +31,8 @@ class Snowflake {
     if( row < 0 ) {
        leds[lights[column][row+1]].setRGB( 0, 0, 50 ); // set final pixel to blue
        return true;
-       Serial.println( "returned true" );
     }
     return false;
-    Serial.println( "returned false" );
   }
 
   
