@@ -34,7 +34,7 @@ static uint16_t noiseX;  // column
 static uint16_t noiseY;  // row
 static uint16_t noiseZ;  // time
 
-uint16_t noiseSpeed = 20;
+uint16_t noiseSpeed = 15;
 uint16_t scale = 311;  // starting point. Scales up from 1 to about 5K (for distance between pixels)
 
 // This is the array that we keep our computed noise values in
