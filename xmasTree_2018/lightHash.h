@@ -8,9 +8,7 @@
 #define COLUMNS 7
 #define NUM_LEDS 150
 
-
 CRGB leds[NUM_LEDS];
-
 
 uint8_t lights[COLUMNS][ROWS];
 
@@ -23,20 +21,24 @@ void initLights() {
       for( int j=0; j<ROWS; j++ ) {
        lights[i][j] = lightIndex + currentJump;
        lightIndex++; 
+
       }
     }
     else {  //odd numbered column, has to count down
       lightIndex += ROWS-1;
       for( int j=0; j<ROWS; j++ ) {
-        lights[i][j] = lightIndex + currentJump;
-        lightIndex--; 
+         Serial.print( i );Serial.print(" "); Serial.print( j );Serial.print(" "); Serial.print( lightIndex ); Serial.print(" ");
+       lights[i][j] = lightIndex+currentJump;
+         Serial.print( lights[i][j] ); Serial.print( "\n" );
+       lightIndex--; 
       }
       lightIndex += ROWS+1;      
     }
+    
     // accommodate the lights that should be masked out at the bottom of the tree
-    if( lightIndex == 40 ) { currentJump += 6; }
-    if( lightIndex == 80 ) { currentJump += 4; }
-    if( lightIndex == 120 ) { currentJump += 4; }
+    if( lightIndex == 40 ) { currentJump+=3; }
+    if( lightIndex == 80 ) { currentJump += 3; }
+    if( lightIndex == 120 ) { currentJump += 3; }
   }
   
 }
