@@ -4,8 +4,6 @@
 
 #include <FastLED.h>
 #include "lightHash.h"
-//#include "Snowflake.h"
-#include "noisefunctions.cpp"
   
 #define PIN 7
 #define FLAKEMAX 50
@@ -18,6 +16,7 @@
 // on a live circuit...if you must, connect GND first.
 
 #ifdef SNOWFLAKE
+#include "Snowflake.h"
 bool isBlue = false;
 struct Snowflake snowflakes[FLAKEMAX];
 uint8_t flakeCount = 0;
@@ -33,9 +32,11 @@ const uint8_t kMatrixHeight = 20;
 static uint16_t noiseX;  // column
 static uint16_t noiseY;  // row
 static uint16_t noiseZ;  // time
+//boolean smokeFlag[7] = {0};
+//SmokeParticle* particle[7] = {}; 
 
-uint16_t noiseSpeed = 15;
-uint16_t scale = 311;  // starting point. Scales up from 1 to about 5K (for distance between pixels)
+uint16_t noiseSpeed = 10;
+uint16_t scale = 31;  // starting point. Scales up from 1 to about 5K (for distance between pixels)
 
 // This is the array that we keep our computed noise values in
 uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
@@ -44,7 +45,7 @@ uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
 
 void setup() {
   Serial.begin(9600);
-  FastLED.addLeds<NEOPIXEL, PIN>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2811, PIN, RGB>(leds, NUM_LEDS);
   initLights();
   randomSeed(analogRead(0));
 }
@@ -63,13 +64,13 @@ void loop() {
  
  }
 
-
+#ifdef FIRE
 void fireUpdate () {
 
   fillNoise8();
   renderNoise();
+//  renderSmoke();
 
-  
 }
 
 // Fill the x/y array of 8-bit noise values using the inoise8 function.
@@ -89,18 +90,56 @@ void renderNoise() {
     for(int j = 0; j < kMatrixHeight; j++) {
       // We use the value at the (i,j) coordinate in the noise
       // array for our brightness, and the flipped value from (j,i)
-      // for our pixel's hue.
+      // for pixel's saturation.
+      uint8_t sat = map(noise[j][i], 0,255, 190, 255);
+      uint8_t bri = map(noise[i][j], 0,255, 100, 200);
 
-      leds[lights[i][j]] = CHSV(noise[j][i],255,noise[i][j]);
+      uint8_t hueMin, hueMax;
+      if( j < 8 ) { hueMin = 4; hueMax = 10; }
+      else if( j < 15 ) { hueMin = 12, hueMax = 16; }
+      else { hueMin = 18; hueMax = 22; }
+      uint8_t hue = map(noise[i][j], 0,255, hueMin,hueMax);
+    
+      if( j < 17 ) {
+        leds[lights[i][j]] = CHSV(hue,sat,max(noise[i][j], 0));
+      }
+      else {
+        leds[lights[i][j]] = CHSV(hue,sat,(noise[i][j]-(j*3)));
+      }
 
-      // You can also explore other ways to constrain the hue used, like below
-      // leds[XY(i,j)] = CHSV(ihue + (noise[j][i]>>2),255,noise[i][j]);
+//      if( j == 7 && sat > 250 && !smokeFlag[i] ) {
+//        spawnSmoke(i);
+//      }
+
     }
   }
 }
+/*
+void renderSmoke() {
 
+  for( int i=0; i<COLUMNS; i++ ) {
+      if( !particle[i]->draw() ) {
+        smokeFlag[i] = false;
+      }   
+  }
+  
+}
+
+
+void spawnSmoke( uint8_t column ) {
+
+    particle[column]->setColumn(column);
+    smokeFlag[column] = true;
+}
+*/
+
+#endif
 
 #ifdef SNOWFLAKE
+
+void addFlake( void );
+void updateFlakes( void );
+
 void snowflakeUpdate() {
      
      // make everything blue
@@ -111,22 +150,18 @@ void snowflakeUpdate() {
             }
         }
         isBlue = true;
-     }
+     }   
 
      if( random(100) < 20 && flakeCount < FLAKEMAX && millis() - lastSpawn > minDelay ) { 
-        if( addFlake() ) {
-          Serial.print("flake added. Count "); Serial.println ( flakeCount );
-        }
-        else {
-          Serial.print( "flake max reached at "); Serial.println( flakeCount );
-        }
+        addFlake();
         lastSpawn = millis();
       }
 
      updateFlakes();
 
-     Serial.println(flakeCount);
 }
+ 
+
 
  void updateFlakes() {
 
@@ -141,13 +176,13 @@ void snowflakeUpdate() {
 
  }
 
-boolean addFlake( void ) {
+void addFlake( void ) {  
+      //iterate the fixed-length array to look for a free flake slot
       for( uint8_t i=0; i<FLAKEMAX; i++ ) {
           if( snowflakes[i].row < 0 ) {
             snowflakes[i].init();
-            return true;
+            return;
           }
         }
-        return false;
 }
 #endif

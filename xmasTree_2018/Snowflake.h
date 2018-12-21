@@ -21,6 +21,7 @@ class Snowflake {
     lastMillis = millis();
   }
 
+  //setColor() is the "update" method
   boolean setColor() {
     if( millis() - lastMillis > animDelay ) {
        leds[lights[column][row]].setRGB( 50, 50, 50 ); // set it to white
@@ -31,10 +32,8 @@ class Snowflake {
     if( row < 0 ) {
        leds[lights[column][row+1]].setRGB( 0, 0, 50 ); // set final pixel to blue
        return true;
-       Serial.println( "returned true" );
     }
     return false;
-    Serial.println( "returned false" );
   }
 
   
